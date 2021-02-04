@@ -1,5 +1,7 @@
 import 'package:basic_banking_app/constants/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
 
 class UserATMCard extends StatefulWidget {
 
@@ -60,9 +62,8 @@ class _UserATMCardState extends State<UserATMCard> {
              Positioned(
                right: 21,
                top: 35,
-               child: CircleAvatar(
-                 backgroundColor: Colors.white,
-               )
+               child:  SvgPicture.asset(cardsIcon[0], width: 40,),
+               
               ),
              Positioned(
                left: 29,
