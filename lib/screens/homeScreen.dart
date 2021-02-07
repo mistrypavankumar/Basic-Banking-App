@@ -1,5 +1,6 @@
 import 'package:basic_banking_app/components/card/atmCard.dart';
 import 'package:basic_banking_app/components/operationCard/operationCard.dart';
+import 'package:basic_banking_app/components/transactionHistory/transactionHistory.dart';
 import 'package:basic_banking_app/constants/constants.dart';
 import 'package:basic_banking_app/constants/data/cardData.dart';
 import 'package:basic_banking_app/screens/transferMoney.dart';
@@ -32,9 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
       greeting = greetingList[0];
     } else if (currentTime.hour >= 12 && currentTime.hour < 18) {
       greeting = greetingList[1];
-    } else if (currentTime.hour >= 18 && currentTime.hour < 20 ) {
+    } else if (currentTime.hour >= 18 && currentTime.hour < 20) {
       greeting = greetingList[2];
-    }else if(currentTime.hour >= 20 && currentTime.hour < 24){
+    } else if (currentTime.hour >= 20 && currentTime.hour < 24) {
       greeting = greetingList[3];
     }
   }
@@ -126,6 +127,11 @@ class _HomeScreenState extends State<HomeScreen> {
                             userName = _list[index].cardHolderName,
                             avatar = _list[index].avatar,
                           });
+                        Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => TransferMoney(
+                                currentBalance: 0,
+                                currentCustomerId: _list[index].id,
+                              )));
                     },
                     child: UserATMCard(
                       cardNumber: _list[index].cardNumber,
@@ -225,33 +231,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: mgDefaultPadding),
                 itemBuilder: (context, index) {
-                  return Container(
-                    height: 70,
-                    margin: const EdgeInsets.only(bottom: 13),
-                    padding: const EdgeInsets.only(
-                        left: 24, top: 12, bottom: 17, right: 22),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey[300],
-                          blurRadius: 10,
-                          spreadRadius: 5,
-                          offset: Offset(8, 8),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 60,
-                          width: 60,
-                          decoration: BoxDecoration(),
-                          child: CircleAvatar(backgroundColor: Colors.blue),
-                        ),
-                      ],
-                    ),
+                  return TransactionHistroy(
+                    isTransfer: true,
                   );
                 },
               ),

@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Basic Banking App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        accentColor: Colors.transparent,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Center(
