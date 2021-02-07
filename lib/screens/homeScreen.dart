@@ -1,7 +1,8 @@
 import 'package:basic_banking_app/components/card/atmCard.dart';
 import 'package:basic_banking_app/components/operationCard/operationCard.dart';
 import 'package:basic_banking_app/constants/constants.dart';
-// import 'package:basic_banking_app/constants/data/cardData.dart';
+import 'package:basic_banking_app/constants/data/cardData.dart';
+import 'package:basic_banking_app/screens/transferMoney.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,10 +12,32 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String userName = "M.Pavan Kumar";
-  String greeting = "Good Night";
+  String avatar = "MP";
+  DateTime currentTime = DateTime.now();
+  List<String> greetingList = [
+    "Good Morning",
+    "Good AfterNoon",
+    "Good Evening",
+    "Good Night"
+  ];
+  String greeting;
+
+  List<CardData> _list;
 
   int current = 0;
   List datas = ["Money Transfer", "Bank Withdraw", "Insights Tracking"];
+
+  void getGreeting() {
+    if (currentTime.hour < 12) {
+      greeting = greetingList[0];
+    } else if (currentTime.hour >= 12 && currentTime.hour < 18) {
+      greeting = greetingList[1];
+    } else if (currentTime.hour >= 18 && currentTime.hour < 20 ) {
+      greeting = greetingList[2];
+    }else if(currentTime.hour >= 20 && currentTime.hour < 24){
+      greeting = greetingList[3];
+    }
+  }
 
   // Handling indicator
   List<T> map<T>(List list, Function handler) {
@@ -24,6 +47,13 @@ class _HomeScreenState extends State<HomeScreen> {
     }
 
     return result;
+  }
+
+  @override
+  void initState() {
+    _list = CardData.cardDataList;
+    getGreeting();
+    super.initState();
   }
 
   @override
@@ -46,13 +76,14 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(right: mgDefaultPadding),
             child: CircleAvatar(
               backgroundColor: Colors.blue.shade200,
-              child: Text("MP"),
+              child: Text(avatar),
             ),
           ),
         ],
       ),
       body: SingleChildScrollView(
-              child: Column(
+        physics: BouncingScrollPhysics(),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
@@ -84,18 +115,28 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 199,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.only(left: mgDefaultPadding, right: 6),
-                itemCount: 3,
+                physics: BouncingScrollPhysics(),
+                padding:
+                    const EdgeInsets.only(left: mgDefaultPadding, right: 6),
+                itemCount: _list.length,
                 itemBuilder: (context, index) {
-                  return UserATMCard(
-                    cardNumber: "**** **** **** 7143",
-                    cardHolderName: "M.Pavan Kumar",
-                    cardExpiryDate: "07-02-2025",
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() => {
+                            userName = _list[index].cardHolderName,
+                            avatar = _list[index].avatar,
+                          });
+                    },
+                    child: UserATMCard(
+                      cardNumber: _list[index].cardNumber,
+                      cardHolderName: _list[index].cardHolderName,
+                      cardExpiryDate: _list[index].cardExpiryDate,
+                      gradientColor: _list[index].mgPrimaryGradient,
+                    ),
                   );
                 },
               ),
             ),
-            
 
             //<<<<<<<<<<<< Operation section >>>>>>>>>>>>>//
             Padding(
@@ -136,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 130,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
+                physics: BouncingScrollPhysics(),
                 itemCount: 3,
                 padding: const EdgeInsets.only(left: mgDefaultPadding),
                 itemBuilder: (context, index) {
@@ -143,6 +185,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       setState(() {
                         current = index;
+                        if (current == 0) {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => TransferMoney()));
+                        }
                       });
                     },
                     child: OperationCard(
@@ -154,63 +200,62 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ),
-          
-          // <<<<<<<<< Transaction Section >>>>>>>>>>>> //
+
+            // <<<<<<<<< Transaction Section >>>>>>>>>>>> //
             Padding(
               padding: const EdgeInsets.only(
                   left: mgDefaultPadding,
                   bottom: 13,
                   top: 29,
                   right: mgDefaultPadding),
-              child:Text(
-                      "Transaction Histories",
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle2
-                          .copyWith(fontSize: 18, fontWeight: FontWeight.w700),
-                    ),
+              child: Text(
+                "Transaction Histories",
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle2
+                    .copyWith(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
             ),
-          
-         Container(
-           child:  ListView.builder(
-            itemCount: 10,
-            shrinkWrap: true,
-            physics: BouncingScrollPhysics(),
-            padding: const EdgeInsets.symmetric(horizontal: mgDefaultPadding),
-            itemBuilder: (context, index){
-              return Container(
-                  height: 70,
-                  margin: const EdgeInsets.only(bottom:13),
-                  padding: const EdgeInsets.only(left: 24, top: 12, bottom: 17, right:22 ),
-                  decoration: BoxDecoration(
-                  color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                     boxShadow: [
+
+            Container(
+              child: ListView.builder(
+                itemCount: 10,
+                shrinkWrap: true,
+                physics: BouncingScrollPhysics(),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: mgDefaultPadding),
+                itemBuilder: (context, index) {
+                  return Container(
+                    height: 70,
+                    margin: const EdgeInsets.only(bottom: 13),
+                    padding: const EdgeInsets.only(
+                        left: 24, top: 12, bottom: 17, right: 22),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
                         BoxShadow(
                           color: Colors.grey[300],
                           blurRadius: 10,
                           spreadRadius: 5,
-                          offset: Offset(8,8),
+                          offset: Offset(8, 8),
                         ),
                       ],
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                           
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 60,
+                          width: 60,
+                          decoration: BoxDecoration(),
+                          child: CircleAvatar(backgroundColor: Colors.blue),
                         ),
-                        child: CircleAvatar(backgroundColor: Colors.blue),
-                      ),
-                    ],
-                  ),
-              );
-            },
-          ),
-         ),
-          
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
           ],
         ),
       ),
