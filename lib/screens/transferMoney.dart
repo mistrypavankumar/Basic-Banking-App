@@ -1,13 +1,15 @@
 import 'package:basic_banking_app/components/customerList/customerList.dart';
 import 'package:basic_banking_app/constants/constants.dart';
 import 'package:basic_banking_app/constants/data/cardData.dart';
+import 'package:basic_banking_app/screens/payment.dart';
 import 'package:flutter/material.dart';
 
 class TransferMoney extends StatefulWidget {
   final double currentBalance;
   final int currentCustomerId;
+  final String currentUserCardNumebr;
 
-  TransferMoney({this.currentBalance, this.currentCustomerId});
+  TransferMoney({this.currentBalance, this.currentCustomerId, this.currentUserCardNumebr});
   @override
   _TransferMoneyState createState() => _TransferMoneyState();
 }
@@ -70,22 +72,28 @@ class _TransferMoneyState extends State<TransferMoney> {
             ),
             Container(
               child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  padding: const EdgeInsets.symmetric(horizontal: mgDefaultPadding),
-                  itemCount: _list.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return GestureDetector(
-                        onTap: () => showModalBottomSheet(
-                          context: context, 
-                          builder: (ctx) => _buildbottomSheet(ctx)
-                        ),
-                        child: CustomerList(
-                        customerName: customeNames(index),
-                        transactionDate: "",
-                      ),
-                    );
-                  }),
+                physics: BouncingScrollPhysics(),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: mgDefaultPadding),
+                itemCount: _list.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => Payment(
+                              customerAvatar: _list[index].avatar,
+                              customerName: _list[index].cardHolderName,
+                              customerAccountNumber: _list[index].cardNumber,
+                              currentUserCardNumber:
+                                  widget.currentUserCardNumebr,
+                            ))),
+                    child: CustomerList(
+                      customerName: customeNames(index),
+                      transactionDate: "",
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -95,19 +103,3 @@ class _TransferMoneyState extends State<TransferMoney> {
 }
 
 // ₹
-
-
-Container _buildbottomSheet(BuildContext context) {
-  return Container(
-    height: 600,
-    padding: const EdgeInsets.all(8),
-    decoration: BoxDecoration(
-      border: Border.all(
-        color: Colors.blue,
-        width: 2,
-      ),
-      borderRadius: BorderRadius.circular(18),
-    ),
-    
-  );
-}
