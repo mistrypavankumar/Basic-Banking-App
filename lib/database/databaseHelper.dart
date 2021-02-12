@@ -7,7 +7,7 @@ import 'package:sqflite/sqflite.dart';
 // database helper class
 class DatabaseHelper {
   // database name
-  static final _databaseName = "banking.db";
+  static final _databaseName = "transaction.db";
   static final _databaseVersion = 1;
 
   // table name
@@ -55,13 +55,13 @@ class DatabaseHelper {
   }
 
   // function to insert data
-  Future<int> insert(Map<String, dynamic> row) async {
+  Future<int> insertData(Map<String, dynamic> row) async {
     Database db = await instance.database;
     return await db.insert(table, row);
   }
 
   // function to query all the rows
-  Future<List<Map<String, dynamic>>> queryAll() async {
+  Future<List<Map<String, dynamic>>> fetchData() async {
     Database db = await instance.database;
     return await db.query(table);
   }

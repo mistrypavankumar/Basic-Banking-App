@@ -131,6 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               builder: (_) => TransferMoney(
                                 currentBalance: 0,
                                 currentCustomerId: _list[index].id,
+                                currentUserCardNumebr: _list[index].cardNumber,
                               )));
                     },
                     child: UserATMCard(
