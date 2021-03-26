@@ -2,13 +2,16 @@ import 'package:basic_banking_app/constants/constants.dart';
 import 'package:flutter/material.dart';
 
 class Payment extends StatefulWidget {
-  final String customerAvatar, customerName, customerAccountNumber,currentUserCardNumber;
+  final String customerAvatar,
+      customerName,
+      customerAccountNumber,
+      currentUserCardNumber;
   Payment({
-    this.customerAvatar, 
-    this.customerName, 
+    this.customerAvatar,
+    this.customerName,
     this.customerAccountNumber,
     this.currentUserCardNumber,
-    });
+  });
   @override
   _PaymentState createState() => _PaymentState();
 }
@@ -17,7 +20,7 @@ class _PaymentState extends State<Payment> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomPadding: false,
+      // resizeToAvoidBottomPadding: false,
       backgroundColor: mgBgColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -82,42 +85,43 @@ class _PaymentState extends State<Payment> {
                   topLeft: Radius.circular(25),
                 )),
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: mgDefaultPadding * 1.5, vertical: mgDefaultPadding * 5/2),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: mgDefaultPadding * 1.5,
+                  vertical: mgDefaultPadding * 5 / 2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Your Card No: ${widget.currentUserCardNumber}",
-                  style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ) ),
+                      style: Theme.of(context).textTheme.subtitle1.copyWith(
+                            fontWeight: FontWeight.w600,
+                          )),
                   SizedBox(height: 5),
-                  Text("Check Balance",
-                  style: Theme.of(context).textTheme.subtitle2.copyWith(
-                    fontWeight: FontWeight.w500,
-                    color: mgBlueColor,
+                  Text(
+                    "Check Balance",
+                    style: Theme.of(context).textTheme.subtitle2.copyWith(
+                          fontWeight: FontWeight.w500,
+                          color: mgBlueColor,
+                        ),
                   ),
-                  ),
-
                   SizedBox(height: 40),
                   Container(
                     width: double.infinity,
                     child: RaisedButton(
                       color: mgBlueColor,
-                      padding: const EdgeInsets.symmetric(vertical: mgDefaultPadding /1.5),
-                      onPressed: (){},
-                      child: Text("Pay",
+                      padding: const EdgeInsets.symmetric(
+                          vertical: mgDefaultPadding / 1.5),
+                      onPressed: () {},
+                      child: Text(
+                        "Pay",
                         style: Theme.of(context).textTheme.headline6.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700
-                        ),
+                            color: Colors.white, fontWeight: FontWeight.w700),
                       ),
-                      ),
+                    ),
                   ),
-                  ],
+                ],
               ),
             ),
           ),
-
         ],
       ),
     );

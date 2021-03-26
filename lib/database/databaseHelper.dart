@@ -1,68 +1,95 @@
-import 'dart:async';
-import 'dart:io';
+import 'package:basic_banking_app/model/transectionDetails.dart';
+import 'package:basic_banking_app/model/userData.dart';
 import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-// database helper class
 class DatabaseHelper {
-  // database name
-  static final _databaseName = "transaction.db";
-  static final _databaseVersion = 1;
+  Future<Database> database() async {
+    return openDatabase(
+      join(await getDatabasesPath(), 'bankingsystem.db'),
+      onCreate: (db, version) async {
+        await db.execute("""CREATE TABLE userDetails(
+              id INTEGER PRIMARY KEY,
+              userName TEXT, 
+              cardNumber VARCHAR,
+              totalAmount DOUBLE,
 
-  // table name
-  static final table = "customer";
+            )""");
+        await db.execute("""CREATE TABLE transections(
+              id INTEGER PRIMARY KEY,
+              transectionId INTEGER, 
+              userName TEXT, 
+              transectionAmount DOUBLE,
+              transectionDone INTEGER,
+          )""");
 
-  // tables column names
-  static final columnID = 'id';
-  static final column_1Name = 'customerName';
-  static final column_2Name = 'currentBalance';
-
-  // a database
-  static Database _database;
-
-  //privateconstrutor
-  DatabaseHelper._privateConstructor();
-  static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
-
-  // Asking for a database
-  Future<Database> get database async {
-    if (_database != null) return _database;
-
-    // create a database if one doesn't exit
-    _database = await _initDatabase();
-    return _database;
+        return db;
+      },
+      version: 1,
+    );
   }
 
-  // function to return database
-  _initDatabase() async {
-    Directory documentdirecoty = await getApplicationDocumentsDirectory();
-    String path = join(documentdirecoty.path, _databaseName);
-    return await openDatabase(path,
-        version: _databaseVersion, onCreate: _onCreate);
+  Future<int> insertUserDetails(UserData userData) async {
+    int transectionId = 0;
+    Database _db = await database();
+    await _db
+        .insert('userDetails', userData.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((value) {
+      transectionId = value;
+    });
+    return transectionId;
   }
 
-  // Create a database since it doesn't exit
-  Future _onCreate(Database db, int version) async {
-    //sql code
-    await db.execute('''
-        CREATE TABLE $table(
-          $columnID INTEGER PRIMARY KEY,
-          $column_1Name TEXT NOT NULL,
-          $column_2Name INTEGER,
-        );
-      ''');
+  Future<int> insertTransectionHistroy(
+      TransectionDetails transectionDetails) async {
+    int transectionId = 0;
+    Database _db = await database();
+    await _db
+        .insert('transections', transectionDetails.toMap(),
+            conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((value) {
+      transectionId = value;
+    });
+    return transectionId;
   }
 
-  // function to insert data
-  Future<int> insertData(Map<String, dynamic> row) async {
-    Database db = await instance.database;
-    return await db.insert(table, row);
+  Future<void> updateTotalAmount(int id, String totalAmount) async {
+    Database _db = await database();
+    await _db.rawUpdate(
+        "UPDATE userDetails SET totalAmount = '$totalAmount' WHERE id = '$id'");
   }
 
-  // function to query all the rows
-  Future<List<Map<String, dynamic>>> fetchData() async {
-    Database db = await instance.database;
-    return await db.query(table);
+  Future<List<UserData>> getUserDetails() async {
+    Database _db = await database();
+    List<Map<String, dynamic>> userMap = await _db.query('userDetails');
+    return List.generate(userMap.length, (index) {
+      return UserData(
+        id: userMap[index]['id'],
+        userName: userMap[index]['userName'],
+        cardNumber: userMap[index]['cardNumber'],
+        totalAmount: userMap[index]['totalAmount'],
+      );
+    });
+  }
+
+  Future<List<TransectionDetails>> getTransectionDetatils(
+      int transectionId) async {
+    Database _db = await database();
+    List<Map<String, dynamic>> trasectionMap = await _db
+        .rawQuery("SELECT * FROM todo WHERE transectionId = $transectionId");
+    return List.generate(trasectionMap.length, (index) {
+      return TransectionDetails(
+          id: trasectionMap[index]['id'],
+          userName: trasectionMap[index]['userName'],
+          transectionId: trasectionMap[index]['transectionId'],
+          transectionDone: trasectionMap[index]['transectionDone']);
+    });
+  }
+
+  Future<void> updateTransectionIsDone(int id, int transectionDone) async {
+    Database _db = await database();
+    await _db.rawUpdate(
+        "UPDATE transections SET transectionDone = '$transectionDone' WHERE id = '$id'");
   }
 }
