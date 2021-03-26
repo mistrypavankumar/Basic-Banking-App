@@ -34,24 +34,28 @@ class _UserATMCardState extends State<UserATMCard> {
         children: [
           Positioned(
             left: 29,
-            top: 48,
+            top: 30,
             child: Text(
               "CARD NUMBER",
               style: Theme.of(context).textTheme.subtitle2.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: .5),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w300,
+                    letterSpacing: .5,
+                    fontSize: 12,
+                  ),
             ),
           ),
           Positioned(
             left: 29,
-            top: 65,
+            top: 49,
             child: Text(
               widget.cardNumber,
               style: Theme.of(context).textTheme.headline6.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: .5),
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: .5,
+                    fontSize: 15,
+                  ),
             ),
           ),
           Positioned(
@@ -64,48 +68,39 @@ class _UserATMCardState extends State<UserATMCard> {
           ),
           Positioned(
             left: 29,
-            bottom: 45,
-            child: Text(
-              "CARD HOLDER NAME",
-              style: Theme.of(context).textTheme.subtitle2.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: .5),
-            ),
+            bottom: 50,
+            child: Text("Total balance",
+                style: Theme.of(context).textTheme.subtitle2.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: .5,
+                      fontSize: 20,
+                    )),
           ),
           Positioned(
             left: 29,
             bottom: 20,
             child: Text(
-              widget.cardHolderName,
-              style: Theme.of(context).textTheme.headline6.copyWith(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: .5),
+              "₹ 80000.0",
+              style: Theme.of(context).textTheme.headline1.copyWith(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: .5,
+                  ),
             ),
           ),
           Positioned(
-            right: 23,
-            bottom: 45,
-            child: Text(
-              "EXPIRY DATE",
-              style: Theme.of(context).textTheme.subtitle2.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w300,
-                  letterSpacing: .5),
-            ),
-          ),
-          Positioned(
-            right: 23,
+            right: 29,
             bottom: 20,
             child: Text(
               widget.cardExpiryDate,
               style: Theme.of(context).textTheme.headline6.copyWith(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: .5),
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: .5,
+                  ),
             ),
           ),
         ],

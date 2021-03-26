@@ -3,6 +3,9 @@ import 'package:basic_banking_app/components/operationCard/operationCard.dart';
 import 'package:basic_banking_app/components/transactionHistory/transactionHistory.dart';
 import 'package:basic_banking_app/constants/constants.dart';
 import 'package:basic_banking_app/constants/data/cardData.dart';
+import 'package:basic_banking_app/database/databaseHelper.dart';
+import 'package:basic_banking_app/model/userData.dart';
+import 'package:basic_banking_app/screens/addCardInfo.dart';
 import 'package:basic_banking_app/screens/transferMoney.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  DatabaseHelper _dbhelper = new DatabaseHelper();
   String userName = "M.Pavan Kumar";
   String avatar = "MP";
   DateTime currentTime = DateTime.now();
@@ -50,10 +54,21 @@ class _HomeScreenState extends State<HomeScreen> {
     return result;
   }
 
+  // void insertDataNow() {
+  //   _dbhelper.insertUserDetails(UserData(
+  //     id: 0,
+  //     userName: "M.Pavan Kumar",
+  //     cardNumber: "**** **** 7143",
+  //     totalAmount: 80000,
+  //   ));
+  // }
+
   @override
   void initState() {
     _list = CardData.cardDataList;
     getGreeting();
+
+    // insertDataNow();
     super.initState();
   }
 
@@ -127,8 +142,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             userName = _list[index].cardHolderName,
                             avatar = _list[index].avatar,
                           });
-                        Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => TransferMoney(
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => TransferMoney(
                                 currentBalance: 0,
                                 currentCustomerId: _list[index].id,
                                 currentUserCardNumebr: _list[index].cardNumber,
@@ -225,21 +240,36 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             Container(
-              child: ListView.builder(
-                itemCount: 10,
-                shrinkWrap: true,
-                physics: BouncingScrollPhysics(),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: mgDefaultPadding),
-                itemBuilder: (context, index) {
-                  return TransactionHistroy(
-                    isTransfer: true,
+              child: FutureBuilder(
+                initialData: [],
+                future: _dbhelper.getUserDetails(),
+                builder: (context, snapshot) {
+                  return ListView.builder(
+                    itemCount: 1,
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: mgDefaultPadding),
+                    itemBuilder: (context, index) {
+                      return TransactionHistroy(
+                        isTransfer: true,
+                        customerName: snapshot.data[index].userName,
+                      );
+                    },
                   );
                 },
               ),
             ),
           ],
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => AddCardInfo()));
+        },
+        child: Icon(Icons.add),
+        backgroundColor: mgBlueColor,
       ),
     );
   }

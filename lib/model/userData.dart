@@ -2,7 +2,7 @@ class UserData {
   final int id;
   final String userName;
   final String cardNumber;
-  final int totalAmount;
+  final double totalAmount;
   // final DateTime transectionAt;
 
   UserData({
