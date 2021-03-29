@@ -5,7 +5,6 @@ import 'package:basic_banking_app/constants/constants.dart';
 import 'package:basic_banking_app/constants/data/cardData.dart';
 import 'package:basic_banking_app/database/databaseHelper.dart';
 import 'package:basic_banking_app/model/userData.dart';
-import 'package:basic_banking_app/screens/addCardInfo.dart';
 import 'package:basic_banking_app/screens/transferMoney.dart';
 import 'package:flutter/material.dart';
 
@@ -67,92 +66,89 @@ class _HomeScreenState extends State<HomeScreen> {
     UserData _userData = UserData(
       id: 0,
       userName: "M.Pavan Kumar",
-      cardNumber: "123456787143",
+      cardNumber: "**** **** **** 7143",
       cardExpiry: "05/25",
       totalAmount: 8000.0,
     );
     UserData _userData1 = UserData(
       id: 1,
       userName: "Ch.Meghana",
-      cardNumber: "123456787142",
+      cardNumber: "**** **** **** 7142",
       cardExpiry: "02/25",
       totalAmount: 19000.0,
     );
     UserData _userData2 = UserData(
       id: 2,
-      userName: "M.Pavan Kumar",
+      userName: "M.Rakesh Kumar",
       cardNumber: "**** **** **** 7143",
       cardExpiry: "05/25",
       totalAmount: 10000.0,
     );
     UserData _userData3 = UserData(
       id: 3,
-      userName: "Ch.Meghana",
-      cardNumber: "**** **** **** 7142",
-      cardExpiry: "02/25",
-      totalAmount: 19000.0,
-    );
-    UserData _userData4 = UserData(
-      id: 4,
       userName: "D.Sai Kamal",
       cardNumber: "1**** **** **** 9423",
       cardExpiry: "01/25",
       totalAmount: 12000.0,
     );
-    UserData _userData5 = UserData(
-      id: 5,
+    UserData _userData4 = UserData(
+      id: 4,
       userName: "D.Sai Teja",
       cardNumber: "**** **** **** 7463",
       cardExpiry: "07/25",
       totalAmount: 18000.0,
     );
-    UserData _userData6 = UserData(
-      id: 6,
+    UserData _userData5 = UserData(
+      id: 5,
       userName: "B.Manoj Reddy",
       cardNumber: "**** **** **** 1463",
       cardExpiry: "08/25",
       totalAmount: 17000.0,
     );
-    UserData _userData7 = UserData(
-      id: 7,
+    UserData _userData6 = UserData(
+      id: 6,
       userName: "B.Rithvik",
       cardNumber: "**** **** **** 1163",
       cardExpiry: "09/25",
       totalAmount: 20000.0,
     );
-    UserData _userData8 = UserData(
-      id: 8,
+    UserData _userData7 = UserData(
+      id: 7,
       userName: "M.Vamshi",
       cardNumber: "**** **** **** 7883",
-      cardExpiry: "008/25",
+      cardExpiry: "08/25",
       totalAmount: 58000.0,
     );
-    UserData _userData9 = UserData(
-      id: 9,
+    UserData _userData8 = UserData(
+      id: 8,
       userName: "Srinivas",
       cardNumber: "**** **** **** 9963",
       cardExpiry: "04/25",
       totalAmount: 33000.0,
     );
-    UserData _userData10 = UserData(
-      id: 10,
+    UserData _userData9 = UserData(
+      id: 9,
       userName: "Vinay",
       cardNumber: "**** **** **** 7463",
       cardExpiry: "05/25",
       totalAmount: 68000.0,
     );
 
-    _dbhelper.insertUserDetails(_userData);
-    _dbhelper.insertUserDetails(_userData1);
-    _dbhelper.insertUserDetails(_userData2);
-    _dbhelper.insertUserDetails(_userData3);
-    _dbhelper.insertUserDetails(_userData4);
-    _dbhelper.insertUserDetails(_userData5);
-    _dbhelper.insertUserDetails(_userData6);
-    _dbhelper.insertUserDetails(_userData7);
-    _dbhelper.insertUserDetails(_userData8);
-    _dbhelper.insertUserDetails(_userData9);
-    _dbhelper.insertUserDetails(_userData10);
+    void insertAllData() async {
+      await _dbhelper.insertUserDetails(_userData);
+      await _dbhelper.insertUserDetails(_userData1);
+      await _dbhelper.insertUserDetails(_userData2);
+      await _dbhelper.insertUserDetails(_userData3);
+      await _dbhelper.insertUserDetails(_userData4);
+      await _dbhelper.insertUserDetails(_userData5);
+      await _dbhelper.insertUserDetails(_userData6);
+      await _dbhelper.insertUserDetails(_userData7);
+      await _dbhelper.insertUserDetails(_userData8);
+      await _dbhelper.insertUserDetails(_userData9);
+    }
+
+    insertAllData();
+
     return Scaffold(
       backgroundColor: mgBgColor,
       appBar: AppBar(
@@ -217,13 +213,13 @@ class _HomeScreenState extends State<HomeScreen> {
                     physics: BouncingScrollPhysics(),
                     padding:
                         const EdgeInsets.only(left: mgDefaultPadding, right: 6),
-                    itemCount: snapshot.data.length,
+                    itemCount: snapshot.data.length - 1,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
                           setState(() => {
                                 userName = snapshot.data[index].userName,
-                                avatar = _list[index].avatar,
+                                avatar = snapshot.data[index].userName[0],
                               });
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (_) => TransferMoney(
@@ -237,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         child: UserATMCard(
                           cardNumber: snapshot.data[index].cardNumber,
                           cardExpiryDate: snapshot.data[index].cardExpiry,
-                          // currentBalance: "8000",
+                          totalAmount: snapshot.data[index].totalAmount,
                           gradientColor: _list[index].mgPrimaryGradient,
                         ),
                       );
@@ -329,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               child: FutureBuilder(
                 initialData: [],
-                future: _dbhelper.getUserDetails(),
+                future: _dbhelper.getTransectionDetatils(0),
                 builder: (context, snapshot) {
                   return ListView.builder(
                     itemCount: 1,
@@ -349,14 +345,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => AddCardInfo()));
-        },
-        child: Icon(Icons.add),
-        backgroundColor: mgBlueColor,
       ),
     );
   }

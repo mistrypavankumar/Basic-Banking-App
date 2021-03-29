@@ -2,7 +2,7 @@ class TransectionDetails {
   final int id;
   final int transectionId;
   final String userName;
-  final DateTime transectionAt;
+  // final DateTime transectionAt;
   final double transectionAmount;
   final bool transectionDone;
 
@@ -11,7 +11,7 @@ class TransectionDetails {
     this.transectionId,
     this.userName,
     this.transectionAmount,
-    this.transectionAt,
+    // this.transectionAt,
     this.transectionDone,
   });
 
@@ -21,7 +21,7 @@ class TransectionDetails {
       'transectionId': transectionId,
       'userName': userName,
       'transectionAmount': transectionAmount,
-      'transectionAt': transectionAt,
+      // 'transectionAt': transectionAt,
       'transectionDone': transectionDone,
     };
   }
