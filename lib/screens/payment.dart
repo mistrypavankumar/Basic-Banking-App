@@ -106,10 +106,11 @@ class _PaymentState extends State<Payment> {
                   SizedBox(height: 40),
                   Container(
                     width: double.infinity,
-                    child: RaisedButton(
-                      color: mgBlueColor,
-                      padding: const EdgeInsets.symmetric(
-                          vertical: mgDefaultPadding / 1.5),
+                    child: ElevatedButton(
+                      // elevation: 6,
+                      // color: mgBlueColor,
+                      // padding: const EdgeInsets.symmetric(
+                      //     vertical: mgDefaultPadding / 1.5),
                       onPressed: () {},
                       child: Text(
                         "Pay",
