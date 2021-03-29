@@ -1,11 +1,13 @@
 import 'package:basic_banking_app/constants/constants.dart';
-import 'package:basic_banking_app/database/databaseHelper.dart';
 import 'package:basic_banking_app/model/userData.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sqflite/sqflite.dart';
+// import 'package:sqflite/sqflite.dart';
 
 class AddCardInfo extends StatefulWidget {
+  final UserData userdata;
+
+  AddCardInfo({this.userdata});
   @override
   _AddCardInfoState createState() => _AddCardInfoState();
 }
@@ -22,16 +24,29 @@ class _AddCardInfoState extends State<AddCardInfo> {
   FocusNode _cardExpiryFocus;
   FocusNode _currentamountFocus;
 
-  DatabaseHelper _dbHelper = new DatabaseHelper();
-
   @override
   void initState() {
+    if (widget.userdata != null) {
+      userName = widget.userdata.userName;
+      cardNumber = widget.userdata.cardNumber;
+      currentAmount = widget.userdata.totalAmount;
+    }
+
     _userNameFocus = FocusNode();
     _cardNumberFocus = FocusNode();
     _cardExpiryFocus = FocusNode();
     _currentamountFocus = FocusNode();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _userNameFocus.dispose();
+    _cardNumberFocus.dispose();
+    _cardExpiryFocus.dispose();
+    _currentamountFocus.dispose();
+    super.dispose();
   }
 
   @override
@@ -72,7 +87,6 @@ class _AddCardInfoState extends State<AddCardInfo> {
                   ),
                   child: TextField(
                     focusNode: _userNameFocus,
-                    controller: TextEditingController()..text = userName,
                     onChanged: (value) {
                       if (value != "") {
                         userName = value;
@@ -199,22 +213,12 @@ class _AddCardInfoState extends State<AddCardInfo> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Expanded(
-                    child: RaisedButton(
-                      color: mgBlueColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      onPressed: () async {
-                        final insertData = UserData(
-                          id: id,
-                          userName: userName,
-                          cardNumber: cardNumber,
-                          totalAmount: currentAmount,
-                        );
-
-                        await _dbHelper.insertUserDetails(insertData);
-                        print(_dbHelper.getUserDetails());
-                      },
+                    child: ElevatedButton(
+                      // color: mgBlueColor,
+                      // shape: RoundedRectangleBorder(
+                      //   borderRadius: BorderRadius.circular(15),
+                      // ),
+                      onPressed: () {},
                       child: Text(
                         "Add Now",
                         style: TextStyle(

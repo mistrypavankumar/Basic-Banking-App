@@ -9,7 +9,7 @@ class UserATMCard extends StatefulWidget {
   UserATMCard({
     Key key,
     @required this.cardNumber,
-    @required this.cardHolderName,
+    this.cardHolderName,
     @required this.cardExpiryDate,
     this.gradientColor,
   });

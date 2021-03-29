@@ -8,19 +8,15 @@ class DatabaseHelper {
     return openDatabase(
       join(await getDatabasesPath(), 'bankingsystem.db'),
       onCreate: (db, version) async {
-        await db.execute("""CREATE TABLE userDetails(
-              id INTEGER PRIMARY KEY,
-              userName TEXT, 
-              cardNumber VARCHAR,
-              totalAmount DOUBLE,
+        await db.execute(
+            "CREATE TABLE userdetails(id INTEGER PRIMARY KEY, userName TEXT,cardNumber VARCHAR,cardExpiry TEXT,totalAmount DOUBLE)");
 
-            )""");
         await db.execute("""CREATE TABLE transections(
               id INTEGER PRIMARY KEY,
-              transectionId INTEGER, 
-              userName TEXT, 
+              transectionId INTEGER,
+              userName TEXT,
               transectionAmount DOUBLE,
-              transectionDone INTEGER,
+              transectionDone INTEGER
           )""");
 
         return db;
@@ -29,16 +25,10 @@ class DatabaseHelper {
     );
   }
 
-  Future<int> insertUserDetails(UserData userData) async {
-    int transectionId = 0;
-    Database _db = await database();
-    await _db
-        .insert('userDetails', userData.toMap(),
-            conflictAlgorithm: ConflictAlgorithm.replace)
-        .then((value) {
-      transectionId = value;
-    });
-    return transectionId;
+  Future<void> insertUserDetails(UserData userdata) async {
+    final Database _db = await database();
+    await _db.insert('userdetails', userdata.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
   Future<int> insertTransectionHistroy(
@@ -61,16 +51,19 @@ class DatabaseHelper {
   }
 
   Future<List<UserData>> getUserDetails() async {
-    Database _db = await database();
-    List<Map<String, dynamic>> userMap = await _db.query('userDetails');
-    return List.generate(userMap.length, (index) {
-      return UserData(
-        id: userMap[index]['id'],
-        userName: userMap[index]['userName'],
-        cardNumber: userMap[index]['cardNumber'],
-        totalAmount: userMap[index]['totalAmount'],
-      );
-    });
+    final Database _db = await database();
+    final List<Map<String, dynamic>> userMap = await _db.query('userdetails');
+    return List.generate(
+      userMap.length,
+      (index) {
+        return UserData(
+          id: userMap[index]['id'],
+          userName: userMap[index]['userName'],
+          cardNumber: userMap[index]['cardNumber'],
+          totalAmount: userMap[index]['totalAmount'],
+        );
+      },
+    );
   }
 
   Future<List<TransectionDetails>> getTransectionDetatils(

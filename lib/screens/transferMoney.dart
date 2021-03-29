@@ -9,7 +9,10 @@ class TransferMoney extends StatefulWidget {
   final int currentCustomerId;
   final String currentUserCardNumebr;
 
-  TransferMoney({this.currentBalance, this.currentCustomerId, this.currentUserCardNumebr});
+  TransferMoney(
+      {this.currentBalance,
+      this.currentCustomerId,
+      this.currentUserCardNumebr});
   @override
   _TransferMoneyState createState() => _TransferMoneyState();
 }
