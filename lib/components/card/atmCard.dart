@@ -5,13 +5,15 @@ import 'package:flutter_svg/flutter_svg.dart';
 class UserATMCard extends StatefulWidget {
   final String cardNumber, cardHolderName, cardExpiryDate;
   final gradientColor;
+  double totalAmount;
 
   UserATMCard({
     Key key,
     @required this.cardNumber,
     this.cardHolderName,
+    @required this.totalAmount,
     @required this.cardExpiryDate,
-    this.gradientColor,
+    @required this.gradientColor,
   });
 
   @override
@@ -81,7 +83,7 @@ class _UserATMCardState extends State<UserATMCard> {
             left: 29,
             bottom: 20,
             child: Text(
-              "₹ 80000.0",
+              "₹ ${widget.totalAmount}",
               style: Theme.of(context).textTheme.headline1.copyWith(
                     color: Colors.white,
                     fontSize: 22,

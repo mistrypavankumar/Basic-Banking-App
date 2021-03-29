@@ -60,6 +60,7 @@ class DatabaseHelper {
           id: userMap[index]['id'],
           userName: userMap[index]['userName'],
           cardNumber: userMap[index]['cardNumber'],
+          cardExpiry: userMap[index]['cardExpiry'],
           totalAmount: userMap[index]['totalAmount'],
         );
       },
@@ -69,13 +70,14 @@ class DatabaseHelper {
   Future<List<TransectionDetails>> getTransectionDetatils(
       int transectionId) async {
     Database _db = await database();
-    List<Map<String, dynamic>> trasectionMap = await _db
-        .rawQuery("SELECT * FROM todo WHERE transectionId = $transectionId");
+    List<Map<String, dynamic>> trasectionMap = await _db.rawQuery(
+        "SELECT * FROM transections WHERE transectionId = $transectionId");
     return List.generate(trasectionMap.length, (index) {
       return TransectionDetails(
           id: trasectionMap[index]['id'],
           userName: trasectionMap[index]['userName'],
           transectionId: trasectionMap[index]['transectionId'],
+          transectionAmount: trasectionMap[index]["transectionAmount"],
           transectionDone: trasectionMap[index]['transectionDone']);
     });
   }
