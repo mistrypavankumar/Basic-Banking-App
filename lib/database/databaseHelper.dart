@@ -11,13 +11,8 @@ class DatabaseHelper {
         await db.execute(
             "CREATE TABLE userdetails(id INTEGER PRIMARY KEY, userName TEXT,cardNumber VARCHAR,cardExpiry TEXT,totalAmount DOUBLE)");
 
-        await db.execute("""CREATE TABLE transections(
-              id INTEGER PRIMARY KEY,
-              transectionId INTEGER,
-              userName TEXT,
-              transectionAmount DOUBLE,
-              transectionDone INTEGER
-          )""");
+        await db.execute(
+            "CREATE TABLE transectionsData(id INTEGER PRIMARY KEY,transectionId INTEGER,userName TEXT,transectionAmount DOUBLE)");
 
         return db;
       },
@@ -31,20 +26,14 @@ class DatabaseHelper {
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<int> insertTransectionHistroy(
+  Future<void> insertTransectionHistroy(
       TransectionDetails transectionDetails) async {
-    int transectionId = 0;
     Database _db = await database();
-    await _db
-        .insert('transections', transectionDetails.toMap(),
-            conflictAlgorithm: ConflictAlgorithm.replace)
-        .then((value) {
-      transectionId = value;
-    });
-    return transectionId;
+    await _db.insert('transectionsData', transectionDetails.toMap(),
+        conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  Future<void> updateTotalAmount(int id, String totalAmount) async {
+  Future<void> updateTotalAmount(int id, double totalAmount) async {
     Database _db = await database();
     await _db.rawUpdate(
         "UPDATE userDetails SET totalAmount = '$totalAmount' WHERE id = '$id'");
@@ -67,18 +56,32 @@ class DatabaseHelper {
     );
   }
 
-  Future<List<TransectionDetails>> getTransectionDetatils(
-      int transectionId) async {
+  Future<List<UserData>> getUserDetailsList(int userId) async {
+    final Database _db = await database();
+    List<Map<String, dynamic>> userMap =
+        await _db.rawQuery("SELECT * FROM userDetails WHERE id != $userId");
+    return List.generate(userMap.length, (index) {
+      return UserData(
+        id: userMap[index]['id'],
+        userName: userMap[index]['userName'],
+        cardNumber: userMap[index]['cardNumber'],
+        cardExpiry: userMap[index]['cardExpiry'],
+        totalAmount: userMap[index]['totalAmount'],
+      );
+    });
+  }
+
+  Future<List<TransectionDetails>> getTransectionDetatils() async {
     Database _db = await database();
-    List<Map<String, dynamic>> trasectionMap = await _db.rawQuery(
-        "SELECT * FROM transections WHERE transectionId = $transectionId");
+    final List<Map<String, dynamic>> trasectionMap =
+        await _db.rawQuery("SELECT * FROM transectionsData");
     return List.generate(trasectionMap.length, (index) {
       return TransectionDetails(
-          id: trasectionMap[index]['id'],
-          userName: trasectionMap[index]['userName'],
-          transectionId: trasectionMap[index]['transectionId'],
-          transectionAmount: trasectionMap[index]["transectionAmount"],
-          transectionDone: trasectionMap[index]['transectionDone']);
+        id: trasectionMap[index]['id'],
+        userName: trasectionMap[index]['userName'],
+        transectionId: trasectionMap[index]['transectionId'],
+        transectionAmount: trasectionMap[index]["transectionAmount"],
+      );
     });
   }
 

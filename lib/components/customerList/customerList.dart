@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 
 class CustomerList extends StatefulWidget {
-
-   final String customerName;
+  final String customerName;
+  final String avatar;
   final String transactionDate;
-  CustomerList({this.customerName, this.transactionDate});
+  final double currentBalance;
+  CustomerList({
+    @required this.customerName,
+    @required this.currentBalance,
+    @required this.avatar,
+    this.transactionDate,
+  });
   @override
   _CustomerListState createState() => _CustomerListState();
 }
@@ -37,7 +43,10 @@ class _CustomerListState extends State<CustomerList> {
                 height: 60,
                 width: 60,
                 decoration: BoxDecoration(),
-                child: CircleAvatar(backgroundColor: Colors.blue),
+                child: CircleAvatar(
+                  backgroundColor: Colors.blue.shade200,
+                  child: Text(widget.avatar),
+                ),
               ),
               SizedBox(width: 10),
               Column(
@@ -57,11 +66,11 @@ class _CustomerListState extends State<CustomerList> {
           Row(
             children: [
               Text(
-                ' ₹80000',
-                style: Theme.of(context).textTheme.subtitle1.copyWith(
-                      color:Colors.green,
-                      fontWeight: FontWeight.w500
-                    ),
+                ' ₹ ${widget.currentBalance}',
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    .copyWith(color: Colors.green, fontWeight: FontWeight.w500),
               ),
             ],
           ),

@@ -2,17 +2,15 @@ class TransectionDetails {
   final int id;
   final int transectionId;
   final String userName;
-  // final DateTime transectionAt;
   final double transectionAmount;
-  final bool transectionDone;
+  // final bool transectionDone;
 
   TransectionDetails({
     this.id,
     this.transectionId,
     this.userName,
     this.transectionAmount,
-    // this.transectionAt,
-    this.transectionDone,
+    // this.transectionDone,
   });
 
   Map<String, dynamic> toMap() {
@@ -21,8 +19,7 @@ class TransectionDetails {
       'transectionId': transectionId,
       'userName': userName,
       'transectionAmount': transectionAmount,
-      // 'transectionAt': transectionAt,
-      'transectionDone': transectionDone,
+      // 'transectionDone': transectionDone,
     };
   }
 }

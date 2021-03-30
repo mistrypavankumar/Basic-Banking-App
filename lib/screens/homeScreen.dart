@@ -4,6 +4,7 @@ import 'package:basic_banking_app/components/transactionHistory/transactionHisto
 import 'package:basic_banking_app/constants/constants.dart';
 import 'package:basic_banking_app/constants/data/cardData.dart';
 import 'package:basic_banking_app/database/databaseHelper.dart';
+import 'package:basic_banking_app/model/transectionDetails.dart';
 import 'package:basic_banking_app/model/userData.dart';
 import 'package:basic_banking_app/screens/transferMoney.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DatabaseHelper _dbhelper = new DatabaseHelper();
-  String userName = "";
-  String avatar = "";
+  String userName = "M.Pavan Kumar";
+  String avatar = "M";
   DateTime currentTime = DateTime.now();
   List<String> greetingList = [
     "Good Morning",
@@ -80,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
     UserData _userData2 = UserData(
       id: 2,
       userName: "M.Rakesh Kumar",
-      cardNumber: "**** **** **** 7143",
+      cardNumber: "**** **** **** 3713",
       cardExpiry: "05/25",
       totalAmount: 10000.0,
     );
@@ -134,20 +135,28 @@ class _HomeScreenState extends State<HomeScreen> {
       totalAmount: 68000.0,
     );
 
-    void insertAllData() async {
-      await _dbhelper.insertUserDetails(_userData);
-      await _dbhelper.insertUserDetails(_userData1);
-      await _dbhelper.insertUserDetails(_userData2);
-      await _dbhelper.insertUserDetails(_userData3);
-      await _dbhelper.insertUserDetails(_userData4);
-      await _dbhelper.insertUserDetails(_userData5);
-      await _dbhelper.insertUserDetails(_userData6);
-      await _dbhelper.insertUserDetails(_userData7);
-      await _dbhelper.insertUserDetails(_userData8);
-      await _dbhelper.insertUserDetails(_userData9);
-    }
+    TransectionDetails _transectionDetails = TransectionDetails(
+      id: 0,
+      transectionId: 0,
+      userName: "M.Pavan Kumar",
+      transectionAmount: 1000,
 
-    insertAllData();
+      // transectionDone: true,
+    );
+
+    _dbhelper.insertUserDetails(_userData);
+    _dbhelper.insertUserDetails(_userData1);
+    _dbhelper.insertUserDetails(_userData2);
+    _dbhelper.insertUserDetails(_userData3);
+    _dbhelper.insertUserDetails(_userData4);
+    _dbhelper.insertUserDetails(_userData5);
+    _dbhelper.insertUserDetails(_userData6);
+    _dbhelper.insertUserDetails(_userData7);
+    _dbhelper.insertUserDetails(_userData8);
+    _dbhelper.insertUserDetails(_userData9);
+
+    _dbhelper.insertTransectionHistroy(_transectionDetails);
+    _dbhelper.updateTotalAmount(1, 20000);
 
     return Scaffold(
       backgroundColor: mgBgColor,
@@ -221,14 +230,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                 userName = snapshot.data[index].userName,
                                 avatar = snapshot.data[index].userName[0],
                               });
-                          Navigator.of(context).push(MaterialPageRoute(
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
                               builder: (_) => TransferMoney(
-                                    currentBalance:
-                                        snapshot.data[index].totalAmount,
-                                    currentCustomerId: snapshot.data[index].id,
-                                    currentUserCardNumebr:
-                                        snapshot.data[index].cardNumber,
-                                  )));
+                                currentBalance:
+                                    snapshot.data[index].totalAmount,
+                                currentCustomerId: snapshot.data[index].id,
+                                currentUserCardNumebr:
+                                    snapshot.data[index].cardNumber,
+                              ),
+                            ),
+                          );
                         },
                         child: UserATMCard(
                           cardNumber: snapshot.data[index].cardNumber,
@@ -325,7 +337,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               child: FutureBuilder(
                 initialData: [],
-                future: _dbhelper.getTransectionDetatils(0),
+                future: _dbhelper.getTransectionDetatils(),
                 builder: (context, snapshot) {
                   return ListView.builder(
                     itemCount: 1,
@@ -335,8 +347,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         horizontal: mgDefaultPadding),
                     itemBuilder: (context, index) {
                       return TransactionHistroy(
-                        isTransfer: true,
-                        customerName: " ",
+                        isTransfer: false,
+                        customerName:
+                            snapshot.data[index].transectionId.toString(),
+                        transferAmount: snapshot.data[index].transectionAmount,
                       );
                     },
                   );
