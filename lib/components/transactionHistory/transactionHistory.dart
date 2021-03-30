@@ -4,7 +4,13 @@ class TransactionHistroy extends StatefulWidget {
   final String customerName;
   final String transactionDate;
   final bool isTransfer;
-  TransactionHistroy({this.customerName, this.transactionDate, this.isTransfer});
+  final double transferAmount;
+  TransactionHistroy({
+    this.customerName,
+    this.transactionDate,
+    this.isTransfer,
+    this.transferAmount,
+  });
   @override
   _TransactionHistroyState createState() => _TransactionHistroyState();
 }
@@ -63,11 +69,12 @@ class _TransactionHistroyState extends State<TransactionHistroy> {
           Row(
             children: [
               Text(
-                widget.isTransfer ? '- ₹80000' : '+ ₹80000',
+                widget.isTransfer
+                    ? '- ₹ ${widget.transferAmount}'
+                    : '+ ₹ ${widget.transferAmount}',
                 style: Theme.of(context).textTheme.subtitle1.copyWith(
-                      color: widget.isTransfer ? Colors.red : Colors.green,
-                      fontWeight: FontWeight.w500
-                    ),
+                    color: widget.isTransfer ? Colors.red : Colors.green,
+                    fontWeight: FontWeight.w500),
               ),
             ],
           ),

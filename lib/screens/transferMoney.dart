@@ -1,6 +1,6 @@
 import 'package:basic_banking_app/components/customerList/customerList.dart';
 import 'package:basic_banking_app/constants/constants.dart';
-import 'package:basic_banking_app/constants/data/cardData.dart';
+import 'package:basic_banking_app/database/databaseHelper.dart';
 import 'package:basic_banking_app/screens/payment.dart';
 import 'package:flutter/material.dart';
 
@@ -9,29 +9,21 @@ class TransferMoney extends StatefulWidget {
   final int currentCustomerId;
   final String currentUserCardNumebr;
 
-  TransferMoney(
-      {this.currentBalance,
-      this.currentCustomerId,
-      this.currentUserCardNumebr});
+  TransferMoney({
+    this.currentBalance,
+    this.currentCustomerId,
+    this.currentUserCardNumebr,
+  });
   @override
   _TransferMoneyState createState() => _TransferMoneyState();
 }
 
 class _TransferMoneyState extends State<TransferMoney> {
-  double _currentBalance = 0;
-
-  List<CardData> _list;
-
-  String customeNames(index) {
-    if (widget.currentCustomerId == index) {
-      return null;
-    }
-    return _list[index].cardHolderName;
-  }
+  double _currentBalance = 0.0;
+  DatabaseHelper _dbHelper = new DatabaseHelper();
 
   @override
   void initState() {
-    _list = CardData.cardDataList;
     super.initState();
   }
 
@@ -74,26 +66,42 @@ class _TransferMoneyState extends State<TransferMoney> {
               ),
             ),
             Container(
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: mgDefaultPadding),
-                itemCount: _list.length,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => Payment(
-                              customerAvatar: _list[index].avatar,
-                              customerName: _list[index].cardHolderName,
-                              customerAccountNumber: _list[index].cardNumber,
+              child: FutureBuilder(
+                initialData: [],
+                future: _dbHelper.getUserDetailsList(widget.currentCustomerId),
+                builder: (context, snapshot) {
+                  return ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: mgDefaultPadding),
+                    itemCount: snapshot.data.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => Payment(
+                              customerAvatar: snapshot.data[index].userName[0],
+                              customerName: snapshot.data[index].userName,
+                              customerAccountNumber:
+                                  snapshot.data[index].cardNumber,
                               currentUserCardNumber:
                                   widget.currentUserCardNumebr,
-                            ))),
-                    child: CustomerList(
-                      customerName: customeNames(index),
-                      transactionDate: "",
-                    ),
+                              currentCustomerId: widget.currentCustomerId,
+                              currentUserBalance: widget.currentBalance,
+                              transferTouserId: snapshot.data[index].id,
+                              tranferTouserCurrentBalance:
+                                  snapshot.data[index].totalAmount,
+                            ),
+                          ),
+                        ),
+                        child: CustomerList(
+                          customerName: snapshot.data[index].userName,
+                          currentBalance: snapshot.data[index].totalAmount,
+                          avatar: snapshot.data[index].userName[0],
+                        ),
+                      );
+                    },
                   );
                 },
               ),
