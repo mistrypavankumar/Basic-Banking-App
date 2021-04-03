@@ -12,7 +12,7 @@ class DatabaseHelper {
             "CREATE TABLE userdetails(id INTEGER PRIMARY KEY, userName TEXT,cardNumber VARCHAR,cardExpiry TEXT,totalAmount DOUBLE)");
 
         await db.execute(
-            "CREATE TABLE transectionsData(id INTEGER PRIMARY KEY,transectionId INTEGER,userName TEXT,transectionAmount DOUBLE)");
+            "CREATE TABLE transectionsData(id INTEGER PRIMARY KEY,transectionId INTEGER,userName TEXT,senderName TEXT,transectionAmount DOUBLE)");
 
         return db;
       },
@@ -79,6 +79,7 @@ class DatabaseHelper {
       return TransectionDetails(
         id: trasectionMap[index]['id'],
         userName: trasectionMap[index]['userName'],
+        senderName: trasectionMap[index]['senderName'],
         transectionId: trasectionMap[index]['transectionId'],
         transectionAmount: trasectionMap[index]["transectionAmount"],
       );

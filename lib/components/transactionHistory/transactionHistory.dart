@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class TransactionHistroy extends StatefulWidget {
-  final String customerName;
-  final String transactionDate;
+  final String customerName, avatar;
+  final String senderName;
   final bool isTransfer;
   final double transferAmount;
   TransactionHistroy({
     this.customerName,
-    this.transactionDate,
+    this.avatar,
+    this.senderName,
     this.isTransfer,
     this.transferAmount,
   });
@@ -43,7 +44,10 @@ class _TransactionHistroyState extends State<TransactionHistroy> {
                 height: 60,
                 width: 60,
                 decoration: BoxDecoration(),
-                child: CircleAvatar(backgroundColor: Colors.blue),
+                child: CircleAvatar(
+                  backgroundColor: Colors.blue,
+                  child: Text("${widget.avatar}"),
+                ),
               ),
               SizedBox(width: 10),
               Column(
@@ -57,7 +61,7 @@ class _TransactionHistroyState extends State<TransactionHistroy> {
                         ),
                   ),
                   Text(
-                    "${widget.transactionDate}",
+                    "${widget.senderName}",
                     style: Theme.of(context).textTheme.subtitle2.copyWith(
                           color: Colors.grey,
                         ),
@@ -70,10 +74,10 @@ class _TransactionHistroyState extends State<TransactionHistroy> {
             children: [
               Text(
                 widget.isTransfer
-                    ? '- ₹ ${widget.transferAmount}'
-                    : '+ ₹ ${widget.transferAmount}',
+                    ? '+ ₹ ${widget.transferAmount}'
+                    : '- ₹ ${widget.transferAmount}',
                 style: Theme.of(context).textTheme.subtitle1.copyWith(
-                    color: widget.isTransfer ? Colors.red : Colors.green,
+                    color: widget.isTransfer ? Colors.green : Colors.red,
                     fontWeight: FontWeight.w500),
               ),
             ],

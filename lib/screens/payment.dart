@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 class Payment extends StatefulWidget {
   final String customerAvatar,
+      senderName,
       customerName,
       customerAccountNumber,
       currentUserCardNumber;
@@ -13,6 +14,7 @@ class Payment extends StatefulWidget {
   Payment({
     this.customerAvatar,
     this.customerName,
+    this.senderName,
     this.customerAccountNumber,
     this.currentUserCardNumber,
     this.currentCustomerId,
@@ -25,7 +27,7 @@ class Payment extends StatefulWidget {
 }
 
 class _PaymentState extends State<Payment> {
-  double transferAmount = 0;
+  double transferAmount;
 
   DatabaseHelper _dbHelper = new DatabaseHelper();
   @override
@@ -122,12 +124,8 @@ class _PaymentState extends State<Payment> {
                     Container(
                       width: double.infinity,
                       child: ElevatedButton(
-                        // bacolor: mgBlueColor,
-                        // padding: const EdgeInsets.symmetric(
-                        //     vertical: mgDefaultPadding / 1.5),
-
                         onPressed: () {
-                          if (transferAmount < 0 ||
+                          if (transferAmount == 0 ||
                               transferAmount > widget.currentUserBalance) {
                             print("Balance is insufficent");
                           } else {
@@ -138,8 +136,6 @@ class _PaymentState extends State<Payment> {
                                 widget.currentCustomerId,
                                 currentUserRemainingBalance);
 
-                            print(widget.currentCustomerId);
-
                             double transferToCurrentBalance =
                                 widget.tranferTouserCurrentBalance +
                                     transferAmount;
@@ -147,14 +143,12 @@ class _PaymentState extends State<Payment> {
                             _dbHelper.updateTotalAmount(widget.transferTouserId,
                                 transferToCurrentBalance);
 
-                            print(widget.transferTouserId);
-
                             TransectionDetails _transectionDetails =
                                 TransectionDetails(
                               transectionId: widget.currentCustomerId,
                               userName: widget.customerName,
+                              senderName: widget.senderName,
                               transectionAmount: transferAmount,
-                              // transectionDone: true,
                             );
 
                             _dbHelper

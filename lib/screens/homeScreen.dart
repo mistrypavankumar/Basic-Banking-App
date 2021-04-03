@@ -4,8 +4,7 @@ import 'package:basic_banking_app/components/transactionHistory/transactionHisto
 import 'package:basic_banking_app/constants/constants.dart';
 import 'package:basic_banking_app/constants/data/cardData.dart';
 import 'package:basic_banking_app/database/databaseHelper.dart';
-import 'package:basic_banking_app/model/transectionDetails.dart';
-import 'package:basic_banking_app/model/userData.dart';
+import 'package:basic_banking_app/screens/addCardDetails.dart';
 import 'package:basic_banking_app/screens/transferMoney.dart';
 import 'package:flutter/material.dart';
 
@@ -64,100 +63,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    UserData _userData = UserData(
-      id: 0,
-      userName: "M.Pavan Kumar",
-      cardNumber: "**** **** **** 7143",
-      cardExpiry: "05/25",
-      totalAmount: 8000.0,
-    );
-    UserData _userData1 = UserData(
-      id: 1,
-      userName: "Ch.Meghana",
-      cardNumber: "**** **** **** 7142",
-      cardExpiry: "02/25",
-      totalAmount: 19000.0,
-    );
-    UserData _userData2 = UserData(
-      id: 2,
-      userName: "M.Rakesh Kumar",
-      cardNumber: "**** **** **** 3713",
-      cardExpiry: "05/25",
-      totalAmount: 10000.0,
-    );
-    UserData _userData3 = UserData(
-      id: 3,
-      userName: "D.Sai Kamal",
-      cardNumber: "1**** **** **** 9423",
-      cardExpiry: "01/25",
-      totalAmount: 12000.0,
-    );
-    UserData _userData4 = UserData(
-      id: 4,
-      userName: "D.Sai Teja",
-      cardNumber: "**** **** **** 7463",
-      cardExpiry: "07/25",
-      totalAmount: 18000.0,
-    );
-    UserData _userData5 = UserData(
-      id: 5,
-      userName: "B.Manoj Reddy",
-      cardNumber: "**** **** **** 1463",
-      cardExpiry: "08/25",
-      totalAmount: 17000.0,
-    );
-    UserData _userData6 = UserData(
-      id: 6,
-      userName: "B.Rithvik",
-      cardNumber: "**** **** **** 1163",
-      cardExpiry: "09/25",
-      totalAmount: 20000.0,
-    );
-    UserData _userData7 = UserData(
-      id: 7,
-      userName: "M.Vamshi",
-      cardNumber: "**** **** **** 7883",
-      cardExpiry: "08/25",
-      totalAmount: 58000.0,
-    );
-    UserData _userData8 = UserData(
-      id: 8,
-      userName: "Srinivas",
-      cardNumber: "**** **** **** 9963",
-      cardExpiry: "04/25",
-      totalAmount: 33000.0,
-    );
-    UserData _userData9 = UserData(
-      id: 9,
-      userName: "Vinay",
-      cardNumber: "**** **** **** 7463",
-      cardExpiry: "05/25",
-      totalAmount: 68000.0,
-    );
-
-    TransectionDetails _transectionDetails = TransectionDetails(
-      id: 0,
-      transectionId: 0,
-      userName: "M.Pavan Kumar",
-      transectionAmount: 1000,
-
-      // transectionDone: true,
-    );
-
-    _dbhelper.insertUserDetails(_userData);
-    _dbhelper.insertUserDetails(_userData1);
-    _dbhelper.insertUserDetails(_userData2);
-    _dbhelper.insertUserDetails(_userData3);
-    _dbhelper.insertUserDetails(_userData4);
-    _dbhelper.insertUserDetails(_userData5);
-    _dbhelper.insertUserDetails(_userData6);
-    _dbhelper.insertUserDetails(_userData7);
-    _dbhelper.insertUserDetails(_userData8);
-    _dbhelper.insertUserDetails(_userData9);
-
-    _dbhelper.insertTransectionHistroy(_transectionDetails);
-    _dbhelper.updateTotalAmount(1, 20000);
-
     return Scaffold(
       backgroundColor: mgBgColor,
       appBar: AppBar(
@@ -222,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     physics: BouncingScrollPhysics(),
                     padding:
                         const EdgeInsets.only(left: mgDefaultPadding, right: 6),
-                    itemCount: snapshot.data.length - 1,
+                    itemCount: snapshot.data.length,
                     itemBuilder: (context, index) {
                       return GestureDetector(
                         onTap: () {
@@ -238,6 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 currentCustomerId: snapshot.data[index].id,
                                 currentUserCardNumebr:
                                     snapshot.data[index].cardNumber,
+                                senderName: snapshot.data[index].userName,
                               ),
                             ),
                           );
@@ -302,10 +208,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       setState(() {
                         current = index;
-                        if (current == 0) {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (_) => TransferMoney()));
-                        }
+                        // if (current == 0) {
+                        //   Navigator.of(context).push(MaterialPageRoute(
+                        //       builder: (_) => TransferMoney()));
+                        // }
                       });
                     },
                     child: OperationCard(
@@ -340,17 +246,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 future: _dbhelper.getTransectionDetatils(),
                 builder: (context, snapshot) {
                   return ListView.builder(
-                    itemCount: 1,
+                    itemCount: snapshot.data.length,
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
                     padding: const EdgeInsets.symmetric(
                         horizontal: mgDefaultPadding),
                     itemBuilder: (context, index) {
                       return TransactionHistroy(
-                        isTransfer: false,
-                        customerName:
-                            snapshot.data[index].transectionId.toString(),
+                        isTransfer: true,
+                        customerName: snapshot.data[index].userName,
                         transferAmount: snapshot.data[index].transectionAmount,
+                        senderName: snapshot.data[index].senderName,
+                        avatar: snapshot.data[index].userName[0],
                       );
                     },
                   );
@@ -360,6 +267,23 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
       ),
+      bottomNavigationBar: BottomAppBar(
+        shape: const CircularNotchedRectangle(),
+        color: mgBlueColor,
+        elevation: 15,
+        child: Container(
+          height: 50,
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: mgBlueColor,
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddCardDetails()));
+        },
+        child: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }
