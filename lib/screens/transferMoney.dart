@@ -7,11 +7,12 @@ import 'package:flutter/material.dart';
 class TransferMoney extends StatefulWidget {
   final double currentBalance;
   final int currentCustomerId;
-  final String currentUserCardNumebr;
+  final String currentUserCardNumebr, senderName;
 
   TransferMoney({
     this.currentBalance,
     this.currentCustomerId,
+    this.senderName,
     this.currentUserCardNumebr,
   });
   @override
@@ -83,6 +84,7 @@ class _TransferMoneyState extends State<TransferMoney> {
                             builder: (context) => Payment(
                               customerAvatar: snapshot.data[index].userName[0],
                               customerName: snapshot.data[index].userName,
+                              senderName: widget.senderName,
                               customerAccountNumber:
                                   snapshot.data[index].cardNumber,
                               currentUserCardNumber:
