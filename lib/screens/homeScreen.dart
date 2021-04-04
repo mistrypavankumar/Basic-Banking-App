@@ -5,6 +5,7 @@ import 'package:basic_banking_app/constants/constants.dart';
 import 'package:basic_banking_app/constants/data/cardData.dart';
 import 'package:basic_banking_app/database/databaseHelper.dart';
 import 'package:basic_banking_app/screens/addCardDetails.dart';
+import 'package:basic_banking_app/screens/screen_onboard.dart';
 import 'package:basic_banking_app/screens/transferMoney.dart';
 import 'package:flutter/material.dart';
 
@@ -15,8 +16,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DatabaseHelper _dbhelper = new DatabaseHelper();
-  String userName = "M.Pavan Kumar";
-  String avatar = "M";
+  String userName = "Hello! ";
+  String avatar = "H";
   DateTime currentTime = DateTime.now();
   List<String> greetingList = [
     "Good Morning",
@@ -208,10 +209,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       setState(() {
                         current = index;
-                        // if (current == 0) {
-                        //   Navigator.of(context).push(MaterialPageRoute(
-                        //       builder: (_) => TransferMoney()));
-                        // }
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ScreenOnBoarding()));
                       });
                     },
                     child: OperationCard(

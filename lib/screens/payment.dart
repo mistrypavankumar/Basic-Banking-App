@@ -1,6 +1,8 @@
+import 'package:basic_banking_app/components/customeDialog/customeDialog.dart';
 import 'package:basic_banking_app/constants/constants.dart';
 import 'package:basic_banking_app/database/databaseHelper.dart';
 import 'package:basic_banking_app/model/transectionDetails.dart';
+import 'package:basic_banking_app/screens/homeScreen.dart';
 import 'package:flutter/material.dart';
 
 class Payment extends StatefulWidget {
@@ -113,26 +115,68 @@ class _PaymentState extends State<Payment> {
                               fontWeight: FontWeight.w600,
                             )),
                     SizedBox(height: 5),
-                    Text(
-                      "Check Balance",
-                      style: Theme.of(context).textTheme.subtitle2.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: mgBlueColor,
-                          ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Text(
+                        "Check Balance",
+                        style: Theme.of(context).textTheme.subtitle2.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: mgBlueColor,
+                            ),
+                      ),
                     ),
                     SizedBox(height: 40),
                     Container(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
-                          if (transferAmount == 0 ||
-                              transferAmount > widget.currentUserBalance) {
-                            print("Balance is insufficent");
+                        onPressed: () async {
+                          if (transferAmount == null) {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomDialog(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    title: "Amount not added",
+                                    description:
+                                        "Please make sure that you added amount in the field",
+                                    buttonText: "Cancel",
+                                    addIcon: Icon(
+                                      Icons.clear,
+                                      color: Colors.white,
+                                      size: 50,
+                                    ),
+                                  );
+                                });
+                          } else if (transferAmount >
+                              widget.currentUserBalance) {
+                            // print("Balance is insufficent");
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomDialog(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    title: "Insufficient Balance",
+                                    description:
+                                        "Please make sure that your account have sufficient balance",
+                                    buttonText: "Cancel",
+                                    addIcon: Icon(
+                                      Icons.clear,
+                                      color: Colors.white,
+                                      size: 50,
+                                    ),
+                                  );
+                                });
                           } else {
                             double currentUserRemainingBalance =
                                 widget.currentUserBalance - transferAmount;
 
-                            _dbHelper.updateTotalAmount(
+                            await _dbHelper.updateTotalAmount(
                                 widget.currentCustomerId,
                                 currentUserRemainingBalance);
 
@@ -140,7 +184,8 @@ class _PaymentState extends State<Payment> {
                                 widget.tranferTouserCurrentBalance +
                                     transferAmount;
 
-                            _dbHelper.updateTotalAmount(widget.transferTouserId,
+                            await _dbHelper.updateTotalAmount(
+                                widget.transferTouserId,
                                 transferToCurrentBalance);
 
                             TransectionDetails _transectionDetails =
@@ -151,14 +196,46 @@ class _PaymentState extends State<Payment> {
                               transectionAmount: transferAmount,
                             );
 
-                            _dbHelper
+                            await _dbHelper
                                 .insertTransectionHistroy(_transectionDetails);
+
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomDialog(
+                                    onPressed: () {
+                                      Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HomeScreen()))
+                                          .then((value) => {});
+                                    },
+                                    title: "Paid Successfully",
+                                    isSuccess: true,
+                                    description:
+                                        "Thanking for using our service. Have a nice day.",
+                                    buttonText: "Home",
+                                    addIcon: Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                      size: 50,
+                                    ),
+                                  );
+                                });
                           }
                         },
-                        child: Text(
-                          "Pay",
-                          style: Theme.of(context).textTheme.headline6.copyWith(
-                              color: Colors.white, fontWeight: FontWeight.w700),
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Text(
+                            "Transfer Now",
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6
+                                .copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w700),
+                          ),
                         ),
                       ),
                     ),
