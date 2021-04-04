@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 const mgBgColor = Color(0xFFFFFFFF);
+// const mgBlueColor = Color(0xFF0D47A1);
 const mgBlueColor = Colors.blue;
 const mgRedColor = Color(0xFFE92E30);
 const mgMenuColor = Color(0xFFC1C1C1);
 const mgBlackColor = Color(0xFF101010);
-
 
 // Gradient color
 const mgPrimaryGradient0 = LinearGradient(

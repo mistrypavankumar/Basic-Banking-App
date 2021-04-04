@@ -1,6 +1,8 @@
+import 'package:basic_banking_app/components/customeDialog/customeDialog.dart';
 import 'package:basic_banking_app/components/textfield/customeTextField.dart';
 import 'package:basic_banking_app/database/databaseHelper.dart';
 import 'package:basic_banking_app/model/userData.dart';
+import 'package:basic_banking_app/screens/homeScreen.dart';
 import 'package:flutter/material.dart';
 
 class AddCardDetails extends StatefulWidget {
@@ -57,7 +59,7 @@ class _AddCardDetailsState extends State<AddCardDetails> {
                     Container(
                       width: double.infinity,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (cardHolderName != null &&
                               cardNumber != null &&
                               cardExpiry != null &&
@@ -69,7 +71,32 @@ class _AddCardDetailsState extends State<AddCardDetails> {
                               totalAmount: currentBalance,
                             );
 
-                            _dbhelper.insertUserDetails(_userData);
+                            await _dbhelper.insertUserDetails(_userData);
+
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return CustomDialog(
+                                    onPressed: () {
+                                      Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HomeScreen()))
+                                          .then((value) => {});
+                                    },
+                                    title: "Success",
+                                    isSuccess: true,
+                                    description:
+                                        "Thanking for adding your details",
+                                    buttonText: "Ok",
+                                    addIcon: Icon(
+                                      Icons.check,
+                                      color: Colors.white,
+                                      size: 50,
+                                    ),
+                                  );
+                                });
                           } else {
                             print("Fail to insert");
                           }
