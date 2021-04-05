@@ -1,9 +1,18 @@
 import 'package:basic_banking_app/screens/addCardDetails.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+// import 'homeScreen.dart';
 
 class ScreenOnBoarding extends StatelessWidget {
+  final SharedPreferences prefs;
+  final String boolKey;
+  ScreenOnBoarding({this.prefs, this.boolKey});
+
   @override
   Widget build(BuildContext context) {
+    prefs.setBool(boolKey, false); // You might want to save this on a callback.
+
     AssetImage assetImage = AssetImage("assets/screen_onboardimg.png");
     Image image = Image(image: assetImage);
 
@@ -58,7 +67,10 @@ class ScreenOnBoarding extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AddCardDetails()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => AddCardDetails()));
                   },
                   child: Text(
                     "Get Started Now",
