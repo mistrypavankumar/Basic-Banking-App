@@ -209,10 +209,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     onTap: () {
                       setState(() {
                         current = index;
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ScreenOnBoarding()));
                       });
                     },
                     child: OperationCard(
