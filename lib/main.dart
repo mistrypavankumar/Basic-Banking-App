@@ -1,9 +1,18 @@
 import 'package:basic_banking_app/screens/homeScreen.dart';
+import 'package:basic_banking_app/screens/screen_onboard.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
+int initScreen;
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  initScreen = preferences.get('initScreen');
+
+  await preferences.setInt('initScree', 1);
+
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
@@ -23,9 +32,11 @@ class MyApp extends StatelessWidget {
         accentColor: Colors.transparent,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Center(
-        child: HomeScreen(),
-      ),
+      initialRoute: initScreen == 0 || initScreen == null ? 'onboard' : 'home',
+      routes: {
+        'home': (context) => HomeScreen(),
+        'onboard': (context) => ScreenOnBoarding()
+      },
     );
   }
 }

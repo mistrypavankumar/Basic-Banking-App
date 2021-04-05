@@ -279,8 +279,23 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: mgBlueColor,
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddCardDetails()));
+          Navigator.push(
+              context,
+              PageRouteBuilder(
+                  transitionDuration: Duration(milliseconds: 100),
+                  transitionsBuilder:
+                      (context, animation, animationTime, child) {
+                    animation = CurvedAnimation(
+                        parent: animation, curve: Curves.easeInOutCubic);
+                    return ScaleTransition(
+                      scale: animation,
+                      alignment: Alignment.bottomCenter,
+                      child: child,
+                    );
+                  },
+                  pageBuilder: (context, animation, animationTime) {
+                    return AddCardDetails();
+                  }));
         },
         child: Icon(Icons.add),
       ),
